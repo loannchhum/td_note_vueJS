@@ -2,19 +2,17 @@ from flask import jsonify, request, abort, make_response, url_for
 from .app import app
 from .models import *
 
-@app.route('/')
+@app.route('/quiz/api/v1.0/questionnaire', methods=['GET'])
 def questionnaire():
     """
-    Get all questionnaires
-    Args:
-        None
-    Returns:
-        list: List of all questionnaires
+        Get all questionnaires
+        Args:
+            None
+        Returns:
+            list: List of all questionnaires
     """
-    #print("hahah",jsonify({'questionnaires': [questionnaire.to_json() for questionnaire in get_all_questionnaires()]}))
-    # se diriger vers temlates/home.html
-    return jsonify({'questionnaires': [questionnaire.to_json() for questionnaire in get_all_questionnaires()]})
-
+    questionnaires = get_all_questionnaires()
+    return jsonify({'questionnaires': [questionnaire.to_json() for questionnaire in questionnaires]})
 
 
 @app.route('/quiz/api/v1.0/questionnaire/', methods=['POST'])
@@ -31,6 +29,8 @@ def create_questionnaire():
     questionnaire = Questionnaire(name=request.json['name'])
     create_questionnaire(questionnaire)
     return jsonify({'questionnaire': questionnaire.to_json()}), 201
+
+
 
 @app.errorhandler(404)
 def not_found(error):

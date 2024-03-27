@@ -1,4 +1,3 @@
-import base64
 from .models import  db, Questionnaire, QuestionSimple, QuestionMultiple
 from .app import app
 

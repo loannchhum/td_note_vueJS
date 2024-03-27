@@ -2,8 +2,8 @@
 import Questionnaire from './components/Questionnaire.vue'
 import axios from 'axios'
 
-let data= {
-  questionnaires: []
+const data = {
+  questionnaires:[]
 }
 
 export default {
@@ -20,16 +20,16 @@ export default {
     async loadDB(){
 
       const response = await axios.get('http://localhost:5000/');
-      // on enregistre les données dans let data
-      console.log(response.data)
+      this.questionnaires = this.mapper(response.data.questionnaires);
     },
-
-    afficherTousLesQuestionnaires(){
-      this.questionnaires.forEach(questionnaire => {
-        console.log(questionnaire);
-      });
+    mapper(questionnaires){
+      return questionnaires.map(questionnaire => {
+        return {
+          id: questionnaire.id,
+          name: questionnaire.name
+        }
+      })
     },
-  
     creerQuestionnaire(){
 
     },
@@ -52,8 +52,8 @@ export default {
   <body>
     <h1>Application </h1>
     <img class="images" src="/img/10738849-autocollant-d-un-signe-de-quiz-de-dessin-anime-vectoriel.jpg">
-    <Questionnaire v-for="questionnaire in questionnaires" :questionnaire="questionnaire" />
-    
+       <!-- afficher chacun des questionnaires  -->
+    <Questionnaire v-for="questionnaire in questionnaires" :Questionnaire="questionnaire" @remove="supprimerQuestionnaire(questionnaire)" @modifier="modifierQuestionnaire(questionnaire)"></Questionnaire>
   </body>
 </template>
 

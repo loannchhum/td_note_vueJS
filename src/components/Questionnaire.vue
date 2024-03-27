@@ -1,5 +1,4 @@
 <script>
-import Question from './Question.vue';
 
 export default {
     props: {
@@ -14,19 +13,16 @@ export default {
             this.$emit('modifier', this.Questionnaire)
         }
     },
-    emits: ['remove'],
-    components : { Question }
+    emits: ['remove', 'modifier']
 }
 </script>
 
 <template>
-    <h3>Questionnaire : {{  this.Questionnaire.nom  }}</h3>
+    <h3>{{  this.Questionnaire.name  }}</h3>
     <li>
         <div>
-            {{ Questionnaire.text }}
             <button @click = "remove">Supprimer</button>
             <button @click = "modifier">Modifier</button>
-            <Question v-for="question in questions" :question="question" @afficherQuestion="afficherQuestion(question.id)"></Question>
         </div>
     </li>
 </template>
