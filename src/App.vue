@@ -1,30 +1,58 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
+<script>
+import Questionnaire from './components/Questionnaire.vue'
+
+export default {
+  name: 'App',
+  methods:{
+    AfficherQuestionnaire(id){
+
+    },
+    creerQuestionnaire(){
+
+    },
+
+    supprimerQuestionnaire(){
+
+    },
+
+    modifierQuestionnaire(){
+
+    }
+  },
+
+  components: { Questionnaire }
+}
+
 </script>
 
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+  <body>
+    <h1>Application </h1>
+    <img class="images" src="/img/10738849-autocollant-d-un-signe-de-quiz-de-dessin-anime-vectoriel.jpg">
+    <ul>
+      <p>Vous pouvez répondre aux questionnaires comportant plusieurs types de questions,
+        avec réponse simple et avec réponses multiples.</p>
+      <h2>Questionnaires disponibles :</h2>
+      <Questionnaire v-for="questionnaire in questionnaires" :questionnaire="questionnaire" @AfficherQuestionnaire="afficherQuestionnaire(questionnaire.id)"/>
+    </ul>
+
+
+  </body>
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<style>
+html{
+  flex-wrap: wrap;
+
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+body {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+.images{
+  max-height: 10vh;
 }
+
 </style>
