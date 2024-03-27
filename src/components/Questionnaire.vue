@@ -1,30 +1,32 @@
 <script>
+import Question from './Question.vue';
 
 export default {
     props: {
-        questionnaire: Object
+        Questionnaire: Object
     },
     methods: {
 
         remove() {
-            this.$emit('remove', this.questionnaire)
+            this.$emit('remove', this.Questionnaire)
         },
         modifier: function() {
-            this.$emit('modifier', this.questionnaire)
+            this.$emit('modifier', this.Questionnaire)
         }
     },
-    emits: ['remove']
+    emits: ['remove'],
+    components : { Question }
 }
 </script>
 
 <template>
-    <h2>Questionnaire : {{  this.questionnaire.nom  }}</h2>
+    <h3>Questionnaire : {{  this.Questionnaire.nom  }}</h3>
     <li>
-        <div class="checkbox" v-bind:class="{ 'alert alert-success': todo.checked}">
-            <input type="checkbox" v-model="todo.checked"></input>
-            {{ todo.text }}
+        <div>
+            {{ Questionnaire.text }}
             <button @click = "remove">Supprimer</button>
             <button @click = "modifier">Modifier</button>
+            <Question v-for="question in questions" :question="question" @afficherQuestion="afficherQuestion(question.id)"></Question>
         </div>
     </li>
 </template>

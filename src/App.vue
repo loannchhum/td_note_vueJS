@@ -48,11 +48,10 @@ html{
 body {
   display: flex;
   flex-wrap: wrap;
-  align-content: center;
   justify-content: center;
 }
 .images{
-  max-height: 10vh;
+  height: 10vh;
 }
 
 </style>
