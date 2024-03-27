@@ -2,16 +2,10 @@
 import Questionnaire from './components/Questionnaire.vue'
 import axios from 'axios'
 
-let data= {
-  questionnaires: []
-}
+let data= []
 
 export default {
   name: 'App',
-  data(){
-    return data;
-  },
-
   mounted(){
     this.loadDB();
   },
@@ -19,14 +13,13 @@ export default {
   methods:{
     async loadDB(){
 
-      const response = await axios.get('http://localhost:5000/');
-      // on enregistre les données dans let data
-      console.log(response.data)
+      data = await axios.get('http://localhost:5000/');
+      data = data.data.questionnaires;
+      console.log(data);
     },
-
     afficherTousLesQuestionnaires(){
       this.questionnaires.forEach(questionnaire => {
-        console.log(questionnaire);
+        console.log(questionnaire.data);
       });
     },
   
@@ -50,22 +43,25 @@ export default {
 
 <template>
   <body>
-    <h1>Application </h1>
-    <img class="images" src="/img/10738849-autocollant-d-un-signe-de-quiz-de-dessin-anime-vectoriel.jpg">
-    <Questionnaire v-for="questionnaire in questionnaires" :questionnaire="questionnaire" />
+    <div>
+      <h1>Application</h1>
+      <img class="images" src="/img/10738849-autocollant-d-un-signe-de-quiz-de-dessin-anime-vectoriel.jpg">
+    </div>
     
+    <h2>Questionnaires disponibles :</h2>
+    <di>
+      <Questionnaire v-for="questionnaire in data" :key="questionnaire.id" :Questionnaire="questionnaire"/>    </di>
   </body>
+  <footer>BABA Ahmet - CHHUM--MOXEL Loann</footer>
 </template>
 
 <style>
 html{
-  flex-wrap: wrap;
-
+  justify-content: center;
 }
 body {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
 }
 .images{
   height: 10vh;

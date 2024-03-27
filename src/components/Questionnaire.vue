@@ -1,5 +1,7 @@
 <script>
 import Question from './Question.vue';
+import axios from 'axios'
+
 
 export default {
     props: {
@@ -20,7 +22,7 @@ export default {
 </script>
 
 <template>
-    <h3>Questionnaire : {{  this.Questionnaire.nom  }}</h3>
+    {{  this.Questionnaire.nom  }}
     <li>
         <div>
             {{ Questionnaire.text }}
