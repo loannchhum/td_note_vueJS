@@ -138,3 +138,15 @@ def get_question_by_questionnaire_id(questionnaire_id):
             list: List of all questions for the questionnaire
     """
     return Question.query.filter_by(questionnaire_id=questionnaire_id).all()
+
+def supprimer_questionnaire(id_questionnaire):
+    """
+        Delete a questionnaire
+        Args:
+            id_questionnaire (int): Id of the questionnaire
+        Returns:
+            None
+    """
+    questionnaire = Questionnaire.query.get(id_questionnaire)
+    db.session.delete(questionnaire)
+    db.session.commit()

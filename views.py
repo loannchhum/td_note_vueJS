@@ -58,3 +58,16 @@ def get_question_questionnaire(questionnaire_id):
     """
     questions = get_question_by_questionnaire_id(questionnaire_id)
     return jsonify({'questions': [question.to_json() for question in questions]})
+
+
+@app.route('/quiz/api/v1.0/questionnaire/<int:questionnaire_id>', methods=['DELETE'])
+def delete_questionnaire(questionnaire_id):
+    """
+        Delete a questionnaire
+        Args:
+            questionnaire_id (int): Id of the questionnaire
+        Returns:
+            None
+    """
+    supprimer_questionnaire(questionnaire_id)
+    return jsonify({'result': True})
