@@ -19,7 +19,7 @@ export default {
   methods:{
     async loadDB(){
 
-      const response = await axios.get('http://localhost:5000/');
+      const response = await axios.get('http://localhost:5000/quiz/api/v1.0/questionnaire');
       this.questionnaires = this.mapper(response.data.questionnaires);
     },
     mapper(questionnaires){
@@ -34,7 +34,11 @@ export default {
 
     },
 
-    supprimerQuestionnaire(){
+    async supprimerQuestionnaire(questionnaire){
+      const supprime=await axios.delete(`http://localhost:5000/quiz/api/v1.0/questionnaire/${questionnaire.id}`);
+      if(supprime.status === 200){
+        this.questionnaires = this.questionnaires.filter(q => q.id !== questionnaire.id);
+      }
 
     },
 
