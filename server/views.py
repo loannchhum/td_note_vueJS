@@ -87,6 +87,7 @@ def create_questionnaire():
     if not request.json or not 'name' in request.json:
         abort(400)
     if cree_questionnaire(request.json.get('name', '')):
+        print('bon')
         return jsonify({'result': True}), 201
     return jsonify({'result': False}), 400
     

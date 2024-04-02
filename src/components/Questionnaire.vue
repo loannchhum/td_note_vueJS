@@ -11,18 +11,22 @@ export default {
         },
         modifier: function() {
             this.$emit('modifier', this.Questionnaire)
+        },
+        showQuestions() {
+            this.$emit('showQuestions', this.Questionnaire.id);
         }
     },
-    emits: ['remove', 'modifier']
+    emits: ['remove', 'modifier', 'showQuestions']
 }
 </script>
 
 <template>
-    <h3>{{  this.Questionnaire.name  }}</h3>
+    <h2 @click="showQuestions">{{Questionnaire.name}}</h2>
     <li>
         <div>
             <button @click = "remove">Supprimer</button>
             <button @click = "modifier">Modifier</button>
+            
         </div>
     </li>
 </template>

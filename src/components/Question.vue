@@ -5,24 +5,33 @@
         },
         methods:{
             remove: function(){
-                this.$emit('remove', this.Question.id);
+                this.$emit('remove', this.Question);
             },
             modifier: function(){
-                this.$emit('modifier', this.Question.id);
+                this.$emit('modifier', this.Question);
             }
         },
-        emits: ['remove']
+        emits: ['remove', 'modifier']
     }
 </script>
 
 <template>
     <div>
-    <label>
-        <input type="radio" name="question" :value="Question.id" @change="modifier">
-        {{Question.question}}
-        <button @click="$emit('remove', Question.id)">Remove</button>
+        <h2>{{Question.title}}</h2>
+        <h3>Choix disponibles :</h3>
+        <div>
+            <label>Choix 1:</label>
+            <input disabled v-model="Question.choix1">
+            <label>Choix 2:</label>
+            <input disabled v-model="Question.choix2">
+            <div v-if="Question.choix3 && Question.choix4">                <label>Choix 3:</label>
+                <input  disabled v-model="Question.choix3">
+                <label>Choix 4:</label>
+                <input disabled v-model="Question.choix4">
+            </div>
+        </div>
+        <button @click="remove">Remove</button>
         <button @click="modifier">Modifier</button>
-    </label>
-    
     </div>
 </template>
+

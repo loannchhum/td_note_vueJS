@@ -1,4 +1,4 @@
 from .app import app
-import server.commands
-import server.models
-import server.views
+import td_note_vueJS.server.commands
+import td_note_vueJS.server.models
+import td_note_vueJS.server.views
