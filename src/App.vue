@@ -18,6 +18,9 @@ export default {
       questionnaires: [],
       questions: [],
       questionAModifier: null,
+      creerQuestion: false,
+      questionnaireAuquelOnAjouteUneQueestion:null
+
     }
   },
 
@@ -33,7 +36,8 @@ export default {
       this.questions = [];
       this.questionAModifier = null;
       this.questionnaireAModifier = null;
-      this.creerQuestion = null;
+      this.questionnaireAuquelOnAjouteUneQueestion=null;
+      this.creerQuestion = false;
     },
     mapper(questionnaires){
       return questionnaires.map(questionnaire => {
@@ -90,10 +94,14 @@ export default {
       console.log(questionnaire.id);
       const response = await axios.get(`http://localhost:5000/quiz/api/v1.0/questionnaire/${questionnaire.id}`);
       // suppresion des questionnaire pour afficher les questions
+
+      this.questionnaireAuquelOnAjouteUneQueestion=this.questionnaires.filter(q => q.id === questionnaire.id);
       this.questionnaires = [];
       this.questions = response.data.questions;
       console.log(this.questions);
     },
+
+  
     async supprimerQuestion(question){
       const supprime=await axios.delete(`http://localhost:5000/quiz/api/v1.0/questionnaire/question/${question.id}`);
       if(supprime.status === 200){
@@ -117,24 +125,56 @@ export default {
         });
         this.questionAModifier = null;
       }
-    }
+    },
+    afficherFormulaireCreeQuest() {
+      this.questionAModifier = null; // Assurez-vous que le formulaire de modification soit caché
+      this.creerQuestion = true; // Affichez le formulaire de création de question
+    },
 
-  },
-
-  async creerQuestion(){
-      this.creerQuestion = true;
-      const response = await axios.post('http://localhost:5000/quiz/api/v1.0/questionnaire/question', {name: this.name});
-      if(response.status === 201){
-        this.questions.push({
-          id: response.data.id,
-          name: this.name
-        });
-        this.name = '';
+  
+    async creerQuest() {
+      let ques= {
+        title: document.getElementById('nomq').value,
+        reponse: document.getElementById('repq').value,
+        questionnaire_id: this.questionnaireAuquelOnAjouteUneQueestion[0].id
+      }
+      if (ques.title === '' || ques.reponse === '' || ques.choix1 === '' || ques.choix2 === '' ) {
+        alert('Veuillez remplir tous les champs');
+        return;
+      }
+      let choix1 = document.getElementById('c1q').value;
+      let choix2 = document.getElementById('c2q').value;
+      let choix3 = document.getElementById('c3q').value;
+      let choix4 = document.getElementById('c4q').value;
+      if (choix1 === '' || choix2 === '') {
+        alert('Veuillez remplir les deux premiers choix');
+        return;
       }
       else{
+        ques.choix1 = choix1;
+        ques.choix2 = choix2;
+      }
+
+      if (choix3 !== '') {
+        // Ajoutez le choix 3 à la question
+        ques.choix3= choix3;
+      }
+      if (choix4 !== '') {
+        ques.choix4 = choix4;
+      }
+    
+      const response = await axios.post('http://localhost:5000/quiz/api/v1.0/questionnaire/question', ques);
+      if (response.status === 201) {
+        // Ajoutez la question à la liste des questions
+        this.questions.push(response.data);
+        // Cachez le formulaire de création de question
+        this.creerQuestion = false;
+      } else {
         alert('Erreur lors de la création de la question');
       }
     },
+  },
+
 
   components: { Questionnaire, Question}
 }
@@ -159,28 +199,26 @@ export default {
         </div>
         <!-- afficher les questions -->
         <div class="conteneur">
-          <input type="text" v-model="Questionname" placeholder="Nom de la question">
-          <button v-if="questions.length >= 0" @click="">Ajouter une question</button>
-          
-          <div v-if="this.creerQuestion != null">
-          <form @submit.prevent="creerQuestion()">
-            <label>Nom de la question:</label>
-            <input type="text" v-model="questionACreer.title"><br>
-            <label>Réponse:</label>
-            <input type="text" v-model="questionACreer.reponse"><br>
-            <!-- Ajoutez les champs pour les choix de la question -->
-            <!-- Par exemple, pour une question simple -->
-            <label>Choix 1:</label>
-            <input type="text" v-model="questionACreer.choix1"><br>
-            <label>Choix 2:</label>
-            <input type="text" v-model="questionACreer.choix2"><br>
-            <label>Choix 3:</label>
-            <input type="text" v-model="questionACreer.choix3"><br>
-            <label>Choix 4:</label>
-            <input type="text" v-model="questionACreer.choix4"><br>
-            <button type="submit">Modifier</button>
-          </form>
-          </div>
+          <button @click="afficherFormulaireCreeQuest()" >Ajouter une question</button>
+            <div v-if="creerQuestion">
+              <h2>Créer une question</h2>
+              <form @submit.prevent="creerQuest()">
+                <label>Nom de la question:</label>
+                <input id="nomq" type="text"><br>
+                <label>Réponse:</label>
+                <input id="repq" type="text"><br>
+                <label>Choix 1:</label>
+                <input id="c1q" type="text" ><br>
+                <label>Choix 2:</label>
+                <input id="c2q" type="text" ><br>
+                  <label>Choix 3:</label>
+                  <input id="c3q" type="text" ><br>
+                  <label>Choix 4:</label>
+                  <input id="c4q" type="text" ><br>
+                
+                <button type="submit">Créer</button>
+              </form>
+            </div>
           <div>
 
           <Question v-for="question in questions" v-if="questions.length > 0"  :Question="question" @remove="supprimerQuestion(question)" @modifier="afficherFormulaireModificationQuestion(question)"></Question>

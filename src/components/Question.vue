@@ -24,8 +24,11 @@
             <input disabled v-model="Question.choix1">
             <label>Choix 2:</label>
             <input disabled v-model="Question.choix2">
-            <div v-if="Question.choix3 && Question.choix4">                <label>Choix 3:</label>
+            <div v-if="Question.choix3">
+                <label>Choix 3:</label>
                 <input  disabled v-model="Question.choix3">
+            </div>
+            <div v-if="Question.choix4">
                 <label>Choix 4:</label>
                 <input disabled v-model="Question.choix4">
             </div>

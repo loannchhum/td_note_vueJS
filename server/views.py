@@ -91,36 +91,38 @@ def create_questionnaire():
         return jsonify({'result': True}), 201
     return jsonify({'result': False}), 400
     
-@app.route('/quiz/api/v1.0/questionnaire/<int:questionnaire_id>/simple', methods=['POST'])
-def create_simple_question(questionnaire_id):
+@app.route('/quiz/api/v1.0/questionnaire/question', methods=['POST'])
+def create_question():
     """
-        Create a simple question
+        Create a question
         Args:
-            questionnaire_id (int): Id of the questionnaire
+            None
         Returns:
             None
     """
-    if not request.json or not 'question' in request.json:
+    print('test'),
+    print(request.json.get('title', ''), request.json.get('choix1',''),request.json.get('choix2',''),request.json.get('reponse', ''), request.json.get('questionnaire_id', ''), request.json.get('choix3',''),request.json.get('choix4',''))
+    if not request.json:
+        print("0000000")
         abort(400)
-    if cree_question_simple(questionnaire_id, request.json.get('question', ''), request.json.get('choix1',''),request.json.get('choix2',''),request.json.get('reponse', '')):
-        return jsonify({'result': True}), 201
-    return jsonify({'result': False}), 400
+    # si la longueur de la request est inferieur ou egale 6
+    elif request.json.get('title', '') == '' or request.json.get('questionnaire_id', '') == '' or request.json.get('choix1','') == '' or request.json.get('choix2','') == '' or request.json.get('reponse', '') == '':
+        print(0)
+        return jsonify({'result': False}), 400
+    elif len(request.json) < 6:
+        # si la fonction cree_question_simple retourne True
+        print(1)
+        cree_question_simple(request.json.get('title', ''), request.json.get('questionnaire_id', ''), request.json.get('choix1',''),request.json.get('choix2',''),request.json.get('reponse', ''))
 
-@app.route('/quiz/api/v1.0/questionnaire/<int:questionnaire_id>/multiple', methods=['POST'])
-def create_multiple_question(questionnaire_id):
-    """
-        Create a multiple question
-        Args:
-            questionnaire_id (int): Id of the questionnaire
-        Returns:
-            None
-    """
-    if not request.json or not 'question' in request.json:
-        abort(400)
-    if cree_question_multiple(questionnaire_id, request.json.get('question', ''), request.json.get('choix1',''),request.json.get('choix2',''),request.json.get('choix3',''),request.json.get('choix4',''),request.json.get('reponse', '')):
         return jsonify({'result': True}), 201
-    return jsonify({'result': False}), 400
-
+    
+    elif len(request.json) > 6:
+        print(2)
+        
+        cree_question_multiple(request.json.get('title', ''), request.json.get('questionnaire_id', ''), request.json.get('choix1',''),request.json.get('choix2',''),request.json.get('choix3',''),request.json.get('choix4',''),request.json.get('reponse', ''))
+        return jsonify({'result': True}), 201
+    else:
+        return jsonify({'result': False}), 400
 @app.route('/quiz/api/v1.0/questionnaire/question/<int:question_id>', methods=['PUT'])
 def update_question( question_id):
     print(request.json)

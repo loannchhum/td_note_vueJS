@@ -190,8 +190,7 @@ def cree_questionnaire(name):
             None
     """
     # on verifie si le questionnaire existe deja
-    if Questionnaire.query.filter_by(name=name).first() is None and name != '' and name is not None:
-        print(name)
+    if name != '' and name is not None and Questionnaire.query.filter_by(name=name).first() is None:
         questionnaire = Questionnaire(id=get_max_id_questionnaire()+1,name=name)
         db.session.add(questionnaire)
         db.session.commit()
@@ -220,10 +219,15 @@ def cree_question_simple(title, questionnaire_id, choix1, choix2, reponse):
         Returns:
             None
     """
-    question = QuestionSimple(id=get_max_id_question()+1, title=title, question_type='simplequestion', questionnaire_id=questionnaire_id, choix1=choix1, choix2=choix2, reponse=reponse)
-    db.session.add(question)
-    db.session.commit()
-    
+    # on verifie si la question existe deja
+    print(Question.query.filter_by(title=title).first())
+    if Question.query.filter_by(title=title).first() is None:
+        print(questionnaire_id, title, choix1, choix2, reponse)
+        question = QuestionSimple(id=get_max_id_question()+1, title=title, question_type='simplequestion', questionnaire_id=questionnaire_id, choix1=choix1, choix2=choix2, reponse=reponse)
+        print("zabdhzbhdbez")
+        db.session.add(question)
+        db.session.commit()
+        
 def cree_question_multiple(title, questionnaire_id, choix1, choix2, choix3, choix4, reponse):
     """
         Create a multiple question
@@ -238,9 +242,14 @@ def cree_question_multiple(title, questionnaire_id, choix1, choix2, choix3, choi
         Returns:
             None
     """
-    question = QuestionMultiple(id=get_max_id_question()+1, title=title, question_type='multiplequestion', questionnaire_id=questionnaire_id, choix1=choix1, choix2=choix2, choix3=choix3, choix4=choix4, reponse=reponse)
-    db.session.add(question)
-    db.session.commit()
+    
+
+    print(questionnaire_id, title, choix1, choix2,choix3,choix4, reponse)
+    if Question.query.filter_by(title=title).first() is None:
+        question = QuestionMultiple(id=get_max_id_question()+1, title=title, question_type='multiplequestion', questionnaire_id=questionnaire_id, choix1=choix1, choix2=choix2, choix3=choix3, choix4=choix4, reponse=reponse)
+        
+        db.session.add(question)
+        db.session.commit()
     
 def mettre_a_jour_question_simple(id_question, title, choix1, choix2, reponse):
     """
