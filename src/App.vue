@@ -51,6 +51,7 @@ export default {
     async creerQuestionnaire(){
       const response = await axios.post('http://localhost:5000/quiz/api/v1.0/questionnaire', {name: this.name});
       if(response.status === 201){
+        console.log(response.data.id)
         this.questionnaires.push({
           id: response.data.id,
           name: this.name
@@ -63,6 +64,7 @@ export default {
     },
 
     async supprimerQuestionnaire(questionnaire){
+      console.log(questionnaire.name, questionnaire.id);
       const supprime=await axios.delete(`http://localhost:5000/quiz/api/v1.0/questionnaire/${questionnaire.id}`);
       if(supprime.status === 200){
         this.questionnaires = this.questionnaires.filter(q => q.id !== questionnaire.id);
@@ -146,6 +148,7 @@ export default {
       let choix2 = document.getElementById('c2q').value;
       let choix3 = document.getElementById('c3q').value;
       let choix4 = document.getElementById('c4q').value;
+      console.log(choix3, choix4);
       if (choix1 === '' || choix2 === '') {
         alert('Veuillez remplir les deux premiers choix');
         return;
@@ -155,23 +158,26 @@ export default {
         ques.choix2 = choix2;
       }
 
-      if (choix3 !== '') {
-        // Ajoutez le choix 3 à la question
-        ques.choix3= choix3;
+      if (choix3 !== '' && choix4 == '') {
+        alert('Veuillez remplir le derniers choix');
+        return;
       }
-      if (choix4 !== '') {
+      else if (choix3 == '' && choix4 !== '') {
+        alert('Veuillez remplir le troisième choix');
+        return;
+      }
+      else if (choix3 !== '' && choix4 !== '') {
+        ques.choix3 = choix3;
         ques.choix4 = choix4;
       }
     
       const response = await axios.post('http://localhost:5000/quiz/api/v1.0/questionnaire/question', ques);
-      if (response.status === 201) {
-        // Ajoutez la question à la liste des questions
-        this.questions.push(response.data);
+        console.log('tetetete')
+        console.log(response.data.questions);
+        this.questions.push(response.data.questions);
         // Cachez le formulaire de création de question
         this.creerQuestion = false;
-      } else {
-        alert('Erreur lors de la création de la question');
-      }
+      
     },
   },
 
@@ -199,7 +205,7 @@ export default {
         </div>
         <!-- afficher les questions -->
         <div class="conteneur">
-          <button @click="afficherFormulaireCreeQuest()" >Ajouter une question</button>
+          <button v-if="this.questionnaireAModifier" @click="afficherFormulaireCreeQuest()" >Ajouter une question</button>
             <div v-if="creerQuestion">
               <h2>Créer une question</h2>
               <form @submit.prevent="creerQuest()">

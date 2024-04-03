@@ -41,7 +41,6 @@ def get_question_questionnaire(questionnaire_id):
             list: List of all questions for the questionnaire
     """
     questions = get_question_by_questionnaire_id(questionnaire_id)
-    print(questions)
     return jsonify({'questions': [question.to_json() for question in questions]})
 
 
@@ -86,10 +85,17 @@ def create_questionnaire():
     """
     if not request.json or not 'name' in request.json:
         abort(400)
-    if cree_questionnaire(request.json.get('name', '')):
-        print('bon')
-        return jsonify({'result': True}), 201
-    return jsonify({'result': False}), 400
+    j=cree_questionnaire(request.json.get('name', ''))
+    if j[0] == True:
+        return jsonify({'result': True, 'id':j[1]}), 201
+    else:
+        return jsonify({'result': False}), 400
+    
+
+def get_question(id):
+    quest=Question.query.get(id)
+    #transformer la question en json
+    return quest.to_json()
     
 @app.route('/quiz/api/v1.0/questionnaire/question', methods=['POST'])
 def create_question():
@@ -100,41 +106,36 @@ def create_question():
         Returns:
             None
     """
-    print('test'),
-    print(request.json.get('title', ''), request.json.get('choix1',''),request.json.get('choix2',''),request.json.get('reponse', ''), request.json.get('questionnaire_id', ''), request.json.get('choix3',''),request.json.get('choix4',''))
     if not request.json:
-        print("0000000")
         abort(400)
     # si la longueur de la request est inferieur ou egale 6
     elif request.json.get('title', '') == '' or request.json.get('questionnaire_id', '') == '' or request.json.get('choix1','') == '' or request.json.get('choix2','') == '' or request.json.get('reponse', '') == '':
-        print(0)
         return jsonify({'result': False}), 400
     elif len(request.json) < 6:
         # si la fonction cree_question_simple retourne True
-        print(1)
-        cree_question_simple(request.json.get('title', ''), request.json.get('questionnaire_id', ''), request.json.get('choix1',''),request.json.get('choix2',''),request.json.get('reponse', ''))
-
-        return jsonify({'result': True}), 201
-    
-    elif len(request.json) > 6:
-        print(2)
+        j=cree_question_simple(request.json.get('title', ''), request.json.get('questionnaire_id', ''), request.json.get('choix1',''),request.json.get('choix2',''),request.json.get('reponse', ''))
         
-        cree_question_multiple(request.json.get('title', ''), request.json.get('questionnaire_id', ''), request.json.get('choix1',''),request.json.get('choix2',''),request.json.get('choix3',''),request.json.get('choix4',''),request.json.get('reponse', ''))
-        return jsonify({'result': True}), 201
+        questions = get_question(j[1])
+        return jsonify({'result': True,'questions': questions})
+    elif len(request.json) > 6:
+        j=cree_question_multiple(request.json.get('title', ''), request.json.get('questionnaire_id', ''), request.json.get('choix1',''),request.json.get('choix2',''),request.json.get('choix3',''),request.json.get('choix4',''),request.json.get('reponse', ''))
+        questions = get_question(j[1])
+        return jsonify({'result':201,'questions': questions})
+    
     else:
         return jsonify({'result': False}), 400
+    
+
+
 @app.route('/quiz/api/v1.0/questionnaire/question/<int:question_id>', methods=['PUT'])
 def update_question( question_id):
-    print(request.json)
     if not request.json:
         abort(400)
     # si la longueur de la request est inferieur ou egale 6
     elif len(request.json) <= 6:
-        print(1)
         mettre_a_jour_question_simple(question_id, request.json.get('title', ''), request.json.get('choix1',''),request.json.get('choix2',''),request.json.get('reponse', ''))
         return jsonify({'result': True})
     elif len(request.json) > 6:
-        print(2)
         mettre_a_jour_question_multiple(question_id, request.json.get('title', ''), request.json.get('choix1',''),request.json.get('choix2',''),request.json.get('choix3',''),request.json.get('choix4',''),request.json.get('reponse', ''))
         return jsonify({'result': True})
     return jsonify({'result': False})
@@ -148,6 +149,5 @@ def delete_question(question_id):
         Returns:
             None
     """
-    print(question_id)
     supprimer_question(question_id)
     return jsonify({'result': True})

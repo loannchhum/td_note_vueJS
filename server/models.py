@@ -194,7 +194,7 @@ def cree_questionnaire(name):
         questionnaire = Questionnaire(id=get_max_id_questionnaire()+1,name=name)
         db.session.add(questionnaire)
         db.session.commit()
-        return True
+        return True,get_max_id_questionnaire()
     return False
 
 def get_max_id_question():
@@ -220,13 +220,12 @@ def cree_question_simple(title, questionnaire_id, choix1, choix2, reponse):
             None
     """
     # on verifie si la question existe deja
-    print(Question.query.filter_by(title=title).first())
     if Question.query.filter_by(title=title).first() is None:
-        print(questionnaire_id, title, choix1, choix2, reponse)
         question = QuestionSimple(id=get_max_id_question()+1, title=title, question_type='simplequestion', questionnaire_id=questionnaire_id, choix1=choix1, choix2=choix2, reponse=reponse)
-        print("zabdhzbhdbez")
         db.session.add(question)
         db.session.commit()
+        return True, get_max_id_question()
+    return False
         
 def cree_question_multiple(title, questionnaire_id, choix1, choix2, choix3, choix4, reponse):
     """
@@ -243,13 +242,14 @@ def cree_question_multiple(title, questionnaire_id, choix1, choix2, choix3, choi
             None
     """
     
-
-    print(questionnaire_id, title, choix1, choix2,choix3,choix4, reponse)
+    # on verifie si la question existe deja
     if Question.query.filter_by(title=title).first() is None:
         question = QuestionMultiple(id=get_max_id_question()+1, title=title, question_type='multiplequestion', questionnaire_id=questionnaire_id, choix1=choix1, choix2=choix2, choix3=choix3, choix4=choix4, reponse=reponse)
         
         db.session.add(question)
         db.session.commit()
+        return True, get_max_id_question()
+    return False
     
 def mettre_a_jour_question_simple(id_question, title, choix1, choix2, reponse):
     """
@@ -301,10 +301,6 @@ def supprimer_question(id_question):
         Returns:
             None
     """
-    print(1)
     question = Question.query.get(id_question)
-    print(2)
     db.session.delete(question)
-    print(3)
     db.session.commit()
-    print(4)
