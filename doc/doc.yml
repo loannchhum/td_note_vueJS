@@ -1,0 +1,203 @@
+openapi: '3.0.2'
+info:
+  title: Titre de l'API
+  version: '1.0'
+servers:
+  - url: http://localhost:5173/quiz/api/v1.0/questionnaire
+paths:
+  /quiz/api/v1.0/questionnaire:
+    get:
+      summary: Obtenir tous les questionnaires
+      responses:
+        '200':
+          description: Liste de tous les questionnaires
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  questionnaires:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Questionnaire'
+    post:
+      summary: Créer un questionnaire
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuestionnaireInput'
+      responses:
+        '201':
+          description: Créé avec succès
+        '400':
+          description: Requête incorrecte
+  /quiz/api/v1.0/questionnaire/{questionnaire_id}:
+    get:
+      summary: Obtenir toutes les questions pour un questionnaire
+      parameters:
+        - in: path
+          name: questionnaire_id
+          required: true
+          schema:
+            type: integer
+          description: ID du questionnaire
+      responses:
+        '200':
+          description: Liste de toutes les questions pour le questionnaire
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  questions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Question'
+    put:
+      summary: Modifier un questionnaire
+      parameters:
+        - in: path
+          name: questionnaire_id
+          required: true
+          schema:
+            type: integer
+          description: ID du questionnaire
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuestionnaireInput'
+      responses:
+        '200':
+          description: Modifié avec succès
+        '400':
+          description: Requête incorrecte
+    delete:
+      summary: Supprimer un questionnaire
+      parameters:
+        - in: path
+          name: questionnaire_id
+          required: true
+          schema:
+            type: integer
+          description: ID du questionnaire
+      responses:
+        '200':
+          description: Supprimé avec succès
+  /question:
+      post:
+        summary: Créer une question
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/QuestionInputSimple'
+                  - $ref: '#/components/schemas/QuestionInputMultiple'
+        responses:
+          '201':
+            description: Créé avec succès
+          '400':
+            description: Requête incorrecte
+  /question/{question_id}:
+      put:
+        summary: Mettre à jour une question
+        parameters:
+          - in: path
+            name: question_id
+            required: true
+            schema:
+              type: integer
+            description: ID de la question
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/QuestionInputSimple'
+                  - $ref: '#/components/schemas/QuestionInputMultiple'
+        responses:
+          '200':
+            description: Mis à jour avec succès
+          '400':
+            description: Requête incorrecte
+      delete:
+        summary: Supprimer une question
+        parameters:
+          - in: path
+            name: question_id
+            required: true
+            schema:
+              type: integer
+            description: ID de la question
+        responses:
+          '200':
+            description: Supprimé avec succès
+components:
+  schemas:
+    Questionnaire:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    Question:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        choix1:
+          type: string
+        choix2:
+          type: string
+        choix3:
+          type: string
+        choix4:
+          type: string
+        reponse:
+          type: string
+        questionnaire_id:
+          type: integer
+    QuestionnaireInput:
+      type: object
+      properties:
+        name:
+          type: string
+    QuestionInputSimple:
+      type: object
+      properties:
+        title:
+          type: string
+        choix1:
+          type: string
+        choix2:
+          type: string
+        reponse:
+          type: string
+        questionnaire_id:
+          type: integer
+    QuestionInputMultiple:
+      type: object
+      properties:
+        title:
+          type: string
+        choix1:
+          type: string
+        choix2:
+          type: string
+        choix3:
+          type: string
+        choix4:
+          type: string
+        reponse:
+          type: string
+        questionnaire_id:
+          type: integer
