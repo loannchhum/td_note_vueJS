@@ -24,10 +24,14 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
+  display: block;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+}
+
+li {
+  list-style-type: none;
 }
 
 h1 {
@@ -76,4 +80,9 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+body a {
+  text-decoration: none;
+  color: black;
 }
